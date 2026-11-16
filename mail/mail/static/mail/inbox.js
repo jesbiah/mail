@@ -17,6 +17,10 @@ function compose_email(recipients = '') {
   document.querySelector('#compose-view').style.display = 'block';
 
   // Clear out composition fields
+  console.log(recipients);
+  console.log(arguments);
+  console.log(arguments[0]);
+  console.log(arguments[1]);
   document.querySelector('#compose-recipients').value = recipients;
   document.querySelector('#compose-subject').value = '';
   document.querySelector('#compose-body').value = '';
@@ -24,7 +28,7 @@ function compose_email(recipients = '') {
   document.querySelector('#compose-form').addEventListener('submit', function() {
 
     // Check for recipient(s)
-    if (!document.querySelector('#compose-recipients').value === '') {
+    if (document.querySelector('#compose-recipients').value !== '') {
 
       // Send form
       const recipients = document.querySelector('#compose-recipients').value;
@@ -68,7 +72,7 @@ function load_mailbox(mailbox) {
           email_table.append(row);
 
           // Add event listener for click
-          row.addEventListener('click', function(email) {
+          row.addEventListener('click', function() {
               const emailsView = document.querySelector('#emails-view');
               fetch('/emails/100')
               .then(response => response.json())
@@ -86,10 +90,17 @@ function load_mailbox(mailbox) {
 
                   let to = document.createElement('p');
                   emailsView.append(to);
-                  const recipients = mail.recipients;
-                  
-                  // Unpack recipients list into appropriately comma-separated list
 
+                  // Unpack recipients list
+                  let recipients = '';
+                  let recipients_count = mail.recipients.length;
+                  recipients += mail.recipients[0];
+
+                  for (let i = 1; i < recipients_count; i++) {
+                    recipients += `, ${mail.recipients[i]}`;
+                  }
+                  to.innerHTML = `<b>To:</b> ${recipients}`;
+                            
                   let subject = document.createElement('p');
                   emailsView.append(subject);
                   subject.innerHTML = `<b>Subject:</b> ${mail.subject}`;
@@ -125,7 +136,20 @@ function load_mailbox(mailbox) {
                   reply.setAttribute('class', 'btn btn-sm btn-outline-primary');
                   reply.setAttribute('id', 'reply');
                   reply.innerHTML = 'Reply';
-                  reply.addEventListener('click', compose_email(mail.sender));
+                  
+                  let reply_recipients = [];
+
+                  // Add sender to recipients list
+                  reply_recipients.push(mail.sender);
+
+                  // Add recipients excluding the current user
+                  const user = document.querySelector('h2').innerHTML;
+                  for (let i = 0; i < recipients_count; i++) {
+                      if (mail.recipients[i] !== user) {
+                        reply_recipients.push(mail.recipients[i]);
+                      }
+                  }              
+                  reply.addEventListener('click', () => compose_email(reply_recipients));
                   
                   emailsView.append(archive);
                   emailsView.append(reply);
