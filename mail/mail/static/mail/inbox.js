@@ -42,6 +42,7 @@ document.addEventListener('DOMContentLoaded', function() {
 function compose_email() {
 
     // Show compose view and hide other views
+    document.querySelector('#email-view').style.display = 'none';
     document.querySelector('#emails-view').style.display = 'none';
     document.querySelector('#compose-view').style.display = 'block';
 
@@ -121,9 +122,13 @@ function open_email(id) {
             <p><b>To:</b> ${email.recipients}</p>
             <p><b>Subject:</b> ${email.subject}</p>
             <p><b>Timestamp:</b> ${email.timestamp}</p>
+            <button class="btn btn-sm btn-outline-primary" id="reply">Reply</button>
             ${archiveButtonTag}
             <hr>
             <p>${email.body}</p>`;
+            document.querySelector('#reply').addEventListener('click', () => {
+                compose_email();
+            });
 
             if (document.querySelector('#archive')){
                 document.querySelector('#archive').addEventListener('click', () => {
