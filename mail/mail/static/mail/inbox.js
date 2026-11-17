@@ -60,9 +60,7 @@ function load_mailbox(mailbox) {
             // Print emails
             console.log(emails);
 
-            let email_count = emails.length;
-            for (let i = 0; i < email_count; i++) {
-                let email = emails[i];
+            emails.forEach(email => {
 
                 // Each email should then be rendered in its own box (e.g. as a <div> with a border) 
                 // that displays who the email is from, what the subject line is, and the timestamp of the email
@@ -87,7 +85,7 @@ function load_mailbox(mailbox) {
                 if (emailView) {
                   emailView.style.display = 'none';
                 }
-            }
+            })
         });
 
     // Show the mailbox name
