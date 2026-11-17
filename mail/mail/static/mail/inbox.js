@@ -34,7 +34,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const body = document.querySelector('#compose-body');
     document.querySelector('#compose-form').addEventListener('submit', (event) => {
         send_email(recipients.value, subject.value, body.value);
-        load_mailbox('sent');
         event.preventDefault();
     });
 });
@@ -73,7 +72,13 @@ function load_mailbox(mailbox) {
                   cssClass += ' bg-secondary';
                 }
                 emailEntry.setAttribute('class', cssClass);
-                emailEntry.innerHTML = `<b>${email.recipients}</b> ${email.subject} ${email.timestamp}`;
+                let displayEmail = '';
+                if (mailbox === 'sent') {
+                    displayEmail = email.recipients;
+                } else {
+                   displayEmail = email.sender;
+                }                
+                emailEntry.innerHTML = `<b>${displayEmail}</b> ${email.subject} ${email.timestamp}`;
                 emailEntry.addEventListener('click', () => {
                     open_email(email.id);
                 });
@@ -206,5 +211,6 @@ function send_email(recipients, subject, body) {
       .then(result => {
           // Print result
           console.log(result);
+          load_mailbox('sent');
       });
 }
