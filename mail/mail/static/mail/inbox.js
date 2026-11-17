@@ -79,16 +79,16 @@ function load_mailbox(mailbox) {
                     open_email(email.id);
                 });
                 document.querySelector('#emails-view').append(emailEntry);
+    
+                // Show the mailbox and hide other views
+                document.querySelector('#emails-view').style.display = 'block';
+                document.querySelector('#compose-view').style.display = 'none';
+                let emailView = document.querySelector('#email-view');
+                if (emailView) {
+                  emailView.style.display = 'none';
+                }
             }
         });
-    
-    // Show the mailbox and hide other views
-    document.querySelector('#emails-view').style.display = 'block';
-    document.querySelector('#compose-view').style.display = 'none';
-    let emailView = document.querySelector('#email-view');
-    if (emailView) {
-      emailView.style.display = 'none';
-    }
 
     // Show the mailbox name
     document.querySelector('#emails-view').innerHTML = `<h3>${mailbox.charAt(0).toUpperCase() + mailbox.slice(1)}</h3>`;
