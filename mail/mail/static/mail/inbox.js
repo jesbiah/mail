@@ -33,17 +33,6 @@ function compose_email() {
 }
 
 function load_mailbox(mailbox) {
-    
-    // Show the mailbox and hide other views
-    document.querySelector('#emails-view').style.display = 'block';
-    document.querySelector('#compose-view').style.display = 'none';
-    let emailView = document.querySelector('#email-view');
-    if (emailView) {
-      emailView.style.display = 'none';
-    }
-
-    // Show the mailbox name
-    document.querySelector('#emails-view').innerHTML = `<h3>${mailbox.charAt(0).toUpperCase() + mailbox.slice(1)}</h3>`;
 
     // Make a GET request to /emails/<mailbox> to request the emails for a particular mailbox
     fetch(`/emails/${mailbox}`)
@@ -60,6 +49,8 @@ function load_mailbox(mailbox) {
                 // that displays who the email is from, what the subject line is, and the timestamp of the email
                 let emailEntry = document.createElement('div');
                 let cssClass = 'border p-3';
+
+                // If the email is unread, it should appear with a white background else, it should appear with a gray background
                 if (email.read) {
                   cssClass += bg-secondary;
                 }
@@ -68,6 +59,17 @@ function load_mailbox(mailbox) {
                 document.querySelector('#emails-view').append(emailEntry);
             }
         });
+    
+    // Show the mailbox and hide other views
+    document.querySelector('#emails-view').style.display = 'block';
+    document.querySelector('#compose-view').style.display = 'none';
+    let emailView = document.querySelector('#email-view');
+    if (emailView) {
+      emailView.style.display = 'none';
+    }
+
+    // Show the mailbox name
+    document.querySelector('#emails-view').innerHTML = `<h3>${mailbox.charAt(0).toUpperCase() + mailbox.slice(1)}</h3>`;
 }
 
 function open_email(id) {
