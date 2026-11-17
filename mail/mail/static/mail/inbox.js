@@ -136,7 +136,10 @@ function open_email(id) {
                             archived: true
                         })
                     })
-                    load_mailbox('inbox');
+                    .then( () => {
+                      load_mailbox('inbox')                    
+
+                    })
                 });
             }
 
@@ -148,7 +151,10 @@ function open_email(id) {
                             archived: false
                         })
                     })
-                    load_mailbox('inbox');
+                    .then( () => {
+                      load_mailbox('inbox')                    
+
+                    })
                 });
             }
             
