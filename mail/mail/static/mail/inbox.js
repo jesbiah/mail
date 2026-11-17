@@ -52,7 +52,7 @@ function load_mailbox(mailbox) {
 
                 // If the email is unread, it should appear with a white background else, it should appear with a gray background
                 if (email.read) {
-                  cssClass += bg-secondary;
+                  cssClass += ' bg-secondary';
                 }
                 emailEntry.setAttribute('class', cssClass);
                 emailEntry.innerHTML = `<b>${email.recipients}</b> ${email.subject} ${email.timestamp}`;
