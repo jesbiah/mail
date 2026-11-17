@@ -42,6 +42,7 @@ document.addEventListener('DOMContentLoaded', function() {
 function compose_email() {
 
     // Show compose view and hide other views
+    document.querySelector('#email-view').style.display = 'none';
     document.querySelector('#emails-view').style.display = 'none';
     document.querySelector('#compose-view').style.display = 'block';
 
@@ -119,9 +120,13 @@ function open_email(id) {
             <p><b>To:</b> ${email.recipients}</p>
             <p><b>Subject:</b> ${email.subject}</p>
             <p><b>Timestamp:</b> ${email.timestamp}</p>
+            <button class="btn btn-sm btn-outline-primary" id="reply">Reply</button>
             ${archiveButtonTag}
             <hr>
             <p>${email.body}</p>`;
+            document.querySelector('#reply').addEventListener('click', () => {
+                reply_email(email);
+            });
 
             if (document.querySelector('#archive')){
                 document.querySelector('#archive').addEventListener('click', () => {
@@ -160,6 +165,24 @@ function open_email(id) {
                 })
             })
         });            
+}
+
+function reply_email(email) {
+
+    // Show compose view and hide other views
+    document.querySelector('#email-view').style.display = 'none';
+    document.querySelector('#emails-view').style.display = 'none';
+    document.querySelector('#compose-view').style.display = 'block';
+
+    // Clear out composition fields
+    document.querySelector('#compose-recipients').value = email.sender;
+    let subject = email.subject;
+    if (!(subject[0] === 'R' && subject[1] === 'e' && subject[2] === ':' && subject[3] === ' ')) {
+        subject = 'Re: ' + subject;
+    }
+    document.querySelector('#compose-subject').value = subject;
+    let body = `On ${email.timestamp} ${email.sender} wrote: ${email.body}`;
+    document.querySelector('#compose-body').value = body;
 }
 
 function send_email(recipients, subject, body) {
