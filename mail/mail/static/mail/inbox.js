@@ -104,13 +104,50 @@ function open_email(id) {
             console.log(email);
 
             // show the email’s sender, recipients, subject, timestamp, and body
+            // When viewing an Inbox email, the user should be presented with a button that lets them archive the email. 
+            // When viewing an Archive email, the user should be presented with a button that lets them unarchive the email. 
+            // This requirement does not apply to emails in the Sent mailbox
+            let archiveButtonTag = '';
+            let userEmail = document.querySelector('h2').innerHTML;
+            if (email.sender !== userEmail) {
+                if (email.archived) {
+                    archiveButtonTag = '<button class="btn btn-sm btn-outline-primary" id="unarchive">Unarchive</button>';
+                } else {
+                    archiveButtonTag = '<button class="btn btn-sm btn-outline-primary" id="archive">Archive</button>';
+                }
+            }
             let emailView = document.querySelector('#email-view');
             emailView.innerHTML = `<p><b>From:</b> ${email.sender}</p>
             <p><b>To:</b> ${email.recipients}</p>
             <p><b>Subject:</b> ${email.subject}</p>
             <p><b>Timestamp:</b> ${email.timestamp}</p>
-            <br><hr>
-            <p>${email.body}</p>`
+            ${archiveButtonTag}
+            <hr>
+            <p>${email.body}</p>`;
+
+            if (document.querySelector('#archive')){
+                document.querySelector('#archive').addEventListener('click', () => {
+                    fetch(`/emails/${id}`, {
+                        method: 'PUT',
+                        body: JSON.stringify({
+                            archived: true
+                        })
+                    })
+                    load_mailbox('inbox');
+                });
+            }
+
+            if (document.querySelector('#unarchive')) {
+                document.querySelector('#unarchive').addEventListener('click', () => {
+                    fetch(`/emails/${id}`, {
+                        method: 'PUT',
+                        body: JSON.stringify({
+                            archived: false
+                        })
+                    })
+                    load_mailbox('inbox');
+                });
+            }
             
             // hide and show the right views when navigation options are clicked
             document.querySelector('#emails-view').style.display = 'none';
@@ -123,8 +160,8 @@ function open_email(id) {
                 body: JSON.stringify({
                     read: true
                 })
-              })
-                      });            
+            })
+        });            
 }
 
 function send_email(recipients, subject, body) {
