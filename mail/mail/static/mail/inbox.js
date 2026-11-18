@@ -92,6 +92,9 @@ function load_mailbox(mailbox) {
                   emailView.style.display = 'none';
                 }
             })
+        })
+        .catch(error => {
+            console.log(`Unable to load ${mailbox} mailbox: ${error}`);
         });
 
     // Show the mailbox name
@@ -142,8 +145,10 @@ function open_email(id) {
                         })
                     })
                     .then( () => {
-                      load_mailbox('inbox')                    
-
+                      load_mailbox('inbox');
+                    })
+                    .catch(error => {
+                        console.log(`Unable to archive email: ${error}`);
                     })
                 });
             }
@@ -157,8 +162,10 @@ function open_email(id) {
                         })
                     })
                     .then( () => {
-                      load_mailbox('inbox')                    
-
+                        load_mailbox('inbox')
+                    })
+                    .catch(error => {
+                        console.log(`Unable to unarchive email: ${error}`);
                     })
                 });
             }
@@ -175,6 +182,12 @@ function open_email(id) {
                     read: true
                 })
             })
+            .catch(error => {
+                console.log(`Unable to mark email as read: ${error}`);
+            })
+        })
+        .catch(error => {
+            console.log(`Unable to open email: ${error}`);
         });            
 }
 
@@ -212,5 +225,8 @@ function send_email(recipients, subject, body) {
           // Print result
           console.log(result);
           load_mailbox('sent');
+      })
+      .catch(error => {
+          console.log(`Unable to send email: ${error}`);          
       });
 }
